@@ -1,0 +1,48 @@
+{
+  "family": "ecs-nginx",
+  "taskRoleArn": "ecsTaskRole",
+  "requiresCompatibilities": [
+    "EC2",
+    "FARGATE"
+  ],
+  "executionRoleArn": "ecsTaskExecutionRole",
+  "runtimePlatform": {
+    "operatingSystemFamily": "LINUX"
+  },
+  "networkMode": "awsvpc",
+  "executionRoleArn": "arn:aws:iam::000000000000:role/PowerUserAccess",
+  "memory": "4096",
+  "cpu": "2048",
+  "containerDefinitions": [
+    {
+      "image": "localhost:4510/ecs-nginx:latest",
+      "name": "ecs-nginx",
+      "cpu": 10,
+      "memory": 512,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "tcp",
+          "hostPort": 8080
+        }
+      ],
+      "environment": [],
+      "entryPoint": [
+        "sh",
+        "-c"
+      ],
+      "command": [
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "ecs-nginx-log",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "logs"
+        }
+      }
+    }
+  ],
+  "networkMode": "bridge"
+}
