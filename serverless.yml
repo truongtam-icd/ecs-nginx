@@ -1,0 +1,86 @@
+service: ecs-nginx
+
+configValidationMode: error
+
+plugins:
+  - serverless-dotenv-plugin
+  - ./plugins/serverless-localstack
+  - ./plugins/serverless-fargate
+
+useDotenv: true
+
+custom:
+  awsAccountId:
+    - 000000000000
+  s3:
+    bucket: serverless-${self:service}-${opt:stage, self:provider.stage}
+  localstack:
+    debug: true
+    stages:
+      - local
+    host: http://localhost
+    edgePort: 4566
+    networks:
+      - host
+      - overlay
+      - local_network
+    docker:
+      sudo: False
+provider:
+  name: aws
+  profile: test
+  region: us-east-1
+  ecr:
+    images:
+      latest:
+        path: ./
+        file: docker/Dockerfile
+        buildArgs:
+          STAGE: ${opt:stage, self:provider.stage}
+        cacheFrom:
+          - serverless-${self:service}-${opt:stage, self:provider.stage}:latest
+        platform: linux/amd64
+  iam:
+    role: EcsNginxRole
+  vpc:
+    securityGroupIds:
+      - ${env:SECURITY_GROUPS}
+    subnetIds:
+      - ${env:SUBNET_ID}
+  stage: local
+
+fargate:
+  memory: "2GB"
+  cpu: 1024
+  logGroupName: ${self:service}-${opt:stage, self:provider.stage}-log-group
+  vpc:
+    securityGroupIds: ${env:SECURITY_GROUPS}
+    subnetIds: ${env:SUBNET_ID}
+    assignPublicIp: true
+  tasks:
+    Nginx:
+      name: nginx
+      image: latest
+      executionRoleArn: arn:aws:iam::${self:custom.awsAccountId}:role/${self:service}-${opt:stage, self:provider.stage}-execution-role
+      taskRoleArn: arn:aws:iam::${self:custom.awsAccountId}:role/${self:service}-${opt:stage, self:provider.stage}-task-role
+      vpc:
+        securityGroupIds: ${env:SECURITY_GROUPS}
+        subnetIds: ${env:SUBNET_ID}
+        assignPublicIp: true
+      command:
+        -
+      entryPoint:
+        - "sh"
+        - "-c"
+      memory: "2GB"
+      cpu: 1024
+      service:
+        desiredCount: 1
+        maximumPercent: 200
+        minimumHealthyPercent: 100
+        spot: false
+resources:
+  # Role
+  - ${file(resources/role.yml)}
+  # # S3
+  - ${file(resources/s3-bucket.yml)}

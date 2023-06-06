@@ -17,9 +17,12 @@ docker run -d \
   -e TEST_AWS_ACCOUNT_ID="000000000000" \
   -e DEFAULT_REGION="us-east-1" \
   -e LOCALSTACK_HOSTNAME="localhost" \
+  -e HOSTNAME="localhost" \
   -e DEBUG=1 \
   -e DOCKER_HOST=unix:///var/run/docker.sock \
   -e HOST_TMP_FOLDER=/tmp/storage_localstack \
+  -e DOCKER_SOCK=/var/run/docker.sock \
+  -e DOCKER_CMD="sudo docker" \
   -v "/tmp/localstack:/tmp/localstack" \
   -v "/var/run/docker.sock:/var/run/docker.sock" \
   -e LOCALSTACK_API_KEY={LOCALSTACK_API_KEY} \
@@ -40,6 +43,22 @@ Start
 ###Localhost
 ```bash
 http://ecs-load-balancer.elb.localhost.localstack.cloud:4566/
+```
+
+###Serverless
+####Install
+```bash
+serverless plugin install -n serverless-dotenv-plugin
+```
+
+####Build
+```bash
+serverless package --stage local --region us-east-1 --aws-profile test
+```
+
+####Deploy
+```bash
+serverless deploy --stage local --region us-east-1 --aws-profile test --force
 ```
 
 #### ECR (Images node)

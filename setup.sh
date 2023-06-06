@@ -39,7 +39,7 @@ export targetGroupArn=$(awslocal elbv2 describe-target-groups --query 'TargetGro
 # Create ECR
 awslocal ecr create-repository --repository-name ecs-nginx
 awslocal ecr get-login-password --region us-east-1 | docker login --username User --password-stdin localhost:4510
-docker build -f ./docker/Nginx.Dockerfile -t localhost:4510/ecs-nginx .
+docker build -f ./docker/Dockerfile -t localhost:4510/ecs-nginx .
 docker push localhost:4510/ecs-nginx
 awslocal ecr list-images --repository-name ecs-nginx
 

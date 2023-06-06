@@ -1,0 +1,23 @@
+{
+  "name": "ecs-nginx",
+  "version": "1.0.0",
+  "description": "Python3: >=3.10.x<br> pip3: >=22.3.x ```bash pip install awscli-local ```",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/truongtam-icd/ecs-nginx.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/truongtam-icd/ecs-nginx/issues"
+  },
+  "homepage": "https://github.com/truongtam-icd/ecs-nginx#readme",
+  "devDependencies": {
+    "serverless": "./package/serverless",
+    "serverless-dotenv-plugin": "^6.0.0"
+  }
+}
