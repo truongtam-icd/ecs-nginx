@@ -5,6 +5,7 @@ configValidationMode: error
 plugins:
   - serverless-dotenv-plugin
   - ./plugins/serverless-localstack
+  - ./plugins/serverless-fargate
 
 useDotenv: true
 
@@ -52,6 +53,23 @@ provider:
     subnetIds:
     - ${self:custom.subnetIds}
   stage: local
+
+fargate:
+  memory: "2GB"
+  cpu: 1024
+  logGroupName: ${self:service}-${opt:stage, self:provider.stage}-log-group
+  vpc:
+    securityGroupIds:
+      - ${self:custom.securityGroupIds}
+    subnetIds:
+      - ${self:custom.subnetIds}
+    assignPublicIp: true
+  tasks:
+    BuildDocker:
+      name: nginx
+      image: latest
+      executionRoleArn: arn:aws:iam::${self:custom.awsAccountId}:role/${self:service}-${opt:stage, self:provider.stage}-execution-role
+      taskRoleArn: arn:aws:iam::${self:custom.awsAccountId}:role/${self:service}-${opt:stage, self:provider.stage}-task-role
 
 resources:
   # Log group
