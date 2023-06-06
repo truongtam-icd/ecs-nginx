@@ -29,6 +29,18 @@ Resources:
                   - s3:ListObjects
                 Resource:
                   - arn:aws:s3:::${self:custom.s3.bucket}*
+              - Effect: Allow
+                Action:
+                  - ec2:AuthorizeSecurityGroupIngress
+                  - ec2:Describe*
+                  - elasticloadbalancing:DeregisterInstancesFromLoadBalancer
+                  - elasticloadbalancing:Describe*
+                  - elasticloadbalancing:RegisterInstancesWithLoadBalancer
+                  - elasticloadbalancing:DeregisterTargets
+                  - elasticloadbalancing:DescribeTargetGroups
+                  - elasticloadbalancing:DescribeTargetHealth
+                  - elasticloadbalancing:RegisterTargets
+                Resource: "*"
   EcsNginxExecutionRole:
     Type: AWS::IAM::Role
     Properties:

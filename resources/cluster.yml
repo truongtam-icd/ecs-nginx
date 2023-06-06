@@ -1,0 +1,9 @@
+Resources:
+  FargateTasksCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: ${self:service}-${opt:stage, self:provider.stage}-cluster
+      CapacityProviders:
+      - FARGATE
+      - FARGATE_SPOT
+      Tags: []

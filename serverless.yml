@@ -5,13 +5,13 @@ configValidationMode: error
 plugins:
   - serverless-dotenv-plugin
   - ./plugins/serverless-localstack
-  - ./plugins/serverless-fargate
 
 useDotenv: true
 
 custom:
-  awsAccountId:
-    - 000000000000
+  awsAccountId: "000000000000"
+  securityGroupIds: ${env:SECURITY_GROUPS}
+  subnetIds: ${env:SUBNET_ID}
   s3:
     bucket: serverless-${self:service}-${opt:stage, self:provider.stage}
   localstack:
@@ -26,6 +26,10 @@ custom:
       - local_network
     docker:
       sudo: False
+  tasks:
+    config:
+      clusterName: serverless-${self:service}-${opt:stage, self:provider.stage}
+
 provider:
   name: aws
   profile: test
@@ -44,43 +48,21 @@ provider:
     role: EcsNginxRole
   vpc:
     securityGroupIds:
-      - ${env:SECURITY_GROUPS}
+    - ${self:custom.securityGroupIds}
     subnetIds:
-      - ${env:SUBNET_ID}
+    - ${self:custom.subnetIds}
   stage: local
 
-fargate:
-  memory: "2GB"
-  cpu: 1024
-  logGroupName: ${self:service}-${opt:stage, self:provider.stage}-log-group
-  vpc:
-    securityGroupIds: ${env:SECURITY_GROUPS}
-    subnetIds: ${env:SUBNET_ID}
-    assignPublicIp: true
-  tasks:
-    Nginx:
-      name: nginx
-      image: latest
-      executionRoleArn: arn:aws:iam::${self:custom.awsAccountId}:role/${self:service}-${opt:stage, self:provider.stage}-execution-role
-      taskRoleArn: arn:aws:iam::${self:custom.awsAccountId}:role/${self:service}-${opt:stage, self:provider.stage}-task-role
-      vpc:
-        securityGroupIds: ${env:SECURITY_GROUPS}
-        subnetIds: ${env:SUBNET_ID}
-        assignPublicIp: true
-      command:
-        -
-      entryPoint:
-        - "sh"
-        - "-c"
-      memory: "2GB"
-      cpu: 1024
-      service:
-        desiredCount: 1
-        maximumPercent: 200
-        minimumHealthyPercent: 100
-        spot: false
 resources:
+  # Log group
+  - ${file(resources/log-group.yml)}
   # Role
   - ${file(resources/role.yml)}
   # # S3
   - ${file(resources/s3-bucket.yml)}
+  # Cluster
+  - ${file(resources/cluster.yml)}
+  # Task
+  - ${file(resources/task.yml)}
+  # Service ECS
+  - ${file(resources/service.yml)}

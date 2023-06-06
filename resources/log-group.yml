@@ -1,0 +1,6 @@
+Resources:
+  FargateTasksLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: ${self:service}-${opt:stage, self:provider.stage}-log-group
+      Tags: []

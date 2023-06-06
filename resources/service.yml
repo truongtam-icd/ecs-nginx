@@ -1,0 +1,18 @@
+Resources:
+  NginxService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: ${self:service}-${opt:stage, self:provider.stage}-service
+      Role: !Ref EcsNginxRole
+      Cluster: !Ref FargateTasksCluster
+      DesiredCount: 1
+      TaskDefinition: !Ref NginxTask
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+          - ${self:custom.securityGroupIds}
+          Subnets:
+          - ${self:custom.subnetIds}
+      LaunchType: FARGATE
+      EnableExecuteCommand: true

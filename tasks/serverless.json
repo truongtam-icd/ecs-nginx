@@ -1,6 +1,6 @@
 {
   "family": "ecs-nginx",
-  "taskRoleArn": "ecsTaskRole",
+  "taskRoleArn": "arn:aws:iam::000000000000:role/ecs-nginx-local-task-role",
   "requiresCompatibilities": [
     "EC2",
     "FARGATE"
@@ -9,12 +9,12 @@
     "operatingSystemFamily": "LINUX"
   },
   "networkMode": "awsvpc",
-  "executionRoleArn": "arn:aws:iam::000000000000:role/PowerUserAccess",
+  "executionRoleArn": "arn:aws:iam::000000000000:role/ecs-nginx-local-execution-role",
   "memory": "4096",
   "cpu": "2048",
   "containerDefinitions": [
     {
-      "image": "localhost:4510/ecs-nginx:latest",
+      "image": "localhost:4510/serverless-ecs-nginx-local:latest",
       "name": "ecs-nginx",
       "cpu": 10,
       "memory": 512,
@@ -36,9 +36,9 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "ecs-nginx-log",
+          "awslogs-group": "ecs-nginx-local-log-group",
           "awslogs-region": "us-east-1",
-          "awslogs-stream-prefix": "logs"
+          "awslogs-stream-prefix": "fargate"
         }
       }
     }
