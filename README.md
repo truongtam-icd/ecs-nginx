@@ -42,23 +42,23 @@ Start
 
 ###Localhost
 ```bash
-http://ecs-load-balancer.elb.localhost.localstack.cloud:4566/
+http://ecs-nginx-local-load-balancer.elb.localhost.localstack.cloud:4566/
 ```
 
 ###Serverless
 ####Install
 ```bash
-serverless plugin install -n serverless-dotenv-plugin
+yarn install
 ```
 
 ####Build
 ```bash
-serverless package --stage local --region us-east-1 --aws-profile test
+yarn build
 ```
 
 ####Deploy
 ```bash
-serverless deploy --stage local --region us-east-1 --aws-profile test --force
+yarn deploy
 ```
 
 #### ECR (Images node)

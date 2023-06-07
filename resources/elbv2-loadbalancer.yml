@@ -1,0 +1,8 @@
+Resources:
+  EcsNginxLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: ${self:service}-${opt:stage, self:provider.stage}-load-balancer
+      Subnets:
+        - ${self:custom.subnetIds}
+      Type: application

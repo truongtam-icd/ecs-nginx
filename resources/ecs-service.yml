@@ -1,6 +1,12 @@
 Resources:
   NginxService:
     Type: AWS::ECS::Service
+    DependsOn:
+      - EcsTargetGroup
+        NginxTask
+        FargateTasksCluster
+        EcsNginxRole
+        EcsNginxLoadBalancer
     Properties:
       ServiceName: ${self:service}-${opt:stage, self:provider.stage}-service
       Role: !Ref EcsNginxRole
@@ -16,3 +22,8 @@ Resources:
             - ${self:custom.subnetIds}
       LaunchType: FARGATE
       EnableExecuteCommand: true
+      LoadBalancers:
+        - ContainerName: ${self:service}
+          LoadBalancerName: !GetAtt EcsNginxLoadBalancer.LoadBalancerName
+          ContainerPort: 8000
+          TargetGroupArn: !GetAtt EcsTargetGroup.TargetGroupArn

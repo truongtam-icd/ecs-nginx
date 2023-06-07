@@ -11,8 +11,11 @@ useDotenv: true
 
 custom:
   awsAccountId: "000000000000"
+  vpcId: ${env:VPC_ID}
   securityGroupIds: ${env:SECURITY_GROUPS}
   subnetIds: ${env:SUBNET_ID}
+  listener: ""
+  path: /
   s3:
     bucket: ${self:service}-${opt:stage, self:provider.stage}
   localstack:
@@ -79,5 +82,13 @@ resources:
   - ${file(resources/ecs-cluster.yml)}
   # ECS Task
   - ${file(resources/ecs-task.yml)}
+  # Load Balancer
+  - ${file(resources/elbv2-loadbalancer.yml)}
+  # Target Group
+  - ${file(resources/elbv2-targetgroup.yml)}
   # ECS Service ECS
   - ${file(resources/ecs-service.yml)}
+  # Listener
+  - ${file(resources/elbv2-listener.yml)}
+  # Listener Rule
+  - ${file(resources/elbv2-listenerrule.yml)}

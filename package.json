@@ -4,7 +4,8 @@
   "description": "Python3: >=3.10.x<br> pip3: >=22.3.x ```bash pip install awscli-local ```",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "serverless package --stage local --region us-east-1 --aws-profile test",
+    "deploy": "serverless deploy --stage local --region us-east-1 --aws-profile test --force"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,17 @@
+Resources:
+  EcsListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    DependsOn:
+      - EcsTargetGroup
+        EcsNginxLoadBalancer
+    Properties:
+      LoadBalancerArn: !Ref EcsNginxLoadBalancer
+      Protocol: HTTP
+      Port: 8080
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !GetAtt EcsTargetGroup.TargetGroupArn
+          ForwardConfig:
+            TargetGroups:
+              - TargetGroupArn: !GetAtt EcsTargetGroup.TargetGroupArn
+                Weight: 11

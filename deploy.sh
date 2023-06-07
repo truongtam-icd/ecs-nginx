@@ -12,3 +12,10 @@ SECURITY_GROUPS=${SECURITY_GROUPS}
 " > .env
 
 serverless deploy --stage local --region us-east-1 --aws-profile test --force
+
+awslocal elbv2 describe-load-balancers
+awslocal elbv2 describe-target-groups
+export loadbalancerArn=$(awslocal elbv2 describe-load-balancers --query 'LoadBalancers[-1].LoadBalancerArn' | sed -e "s/\"//g")
+export targetGroupArn=$(awslocal elbv2 describe-target-groups --query 'TargetGroups[-1].TargetGroupArn' | sed -e "s/\"//g")
+awslocal elbv2 describe-listeners --load-balancer-arn ${loadbalancerArn}
+awslocal elbv2 describe-target-health --target-group-arn ${targetGroupArn}

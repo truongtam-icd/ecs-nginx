@@ -1,0 +1,20 @@
+Resources:
+  EcsListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn:
+      - EcsListener
+        EcsTargetGroup
+    Properties:
+      ListenerArn: !GetAtt EcsListener.ListenerArn
+      Priority: 1
+      Conditions:
+        - Field: path-pattern
+          Values:
+            - "/"
+      Actions:
+        - TargetGroupArn: !GetAtt EcsTargetGroup.TargetGroupArn
+          Type: forward
+          ForwardConfig:
+            TargetGroups:
+            - TargetGroupArn: !GetAtt EcsTargetGroup.TargetGroupArn
+              Weight: 11

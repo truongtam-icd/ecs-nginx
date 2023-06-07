@@ -13,6 +13,5 @@ docker/data/*.mdf
 docker/data/*.ldf
 */.DS_Store
 env.production
-*.html
 *.done
 .serverless

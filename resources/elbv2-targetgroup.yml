@@ -1,0 +1,15 @@
+Resources:
+  EcsTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - EcsNginxLoadBalancer
+    Properties:
+      Name: ${self:service}-${opt:stage, self:provider.stage}-target-group
+      VpcId: ${self:custom.vpcId}
+      TargetType: ip
+      Port: 8080
+      Protocol: HTTP
+      Targets:
+        - Id: 172.17.0.3  # DOCKER_BRIDGE_IP 172.17.0.1 (Private Ip ECS)
+          Port: 8080
+          AvailabilityZone: all
