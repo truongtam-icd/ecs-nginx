@@ -14,7 +14,7 @@ custom:
   securityGroupIds: ${env:SECURITY_GROUPS}
   subnetIds: ${env:SUBNET_ID}
   s3:
-    bucket: serverless-${self:service}-${opt:stage, self:provider.stage}
+    bucket: ${self:service}-${opt:stage, self:provider.stage}
   localstack:
     debug: true
     stages:
@@ -27,9 +27,6 @@ custom:
       - local_network
     docker:
       sudo: False
-  tasks:
-    config:
-      clusterName: serverless-${self:service}-${opt:stage, self:provider.stage}
 
 provider:
   name: aws
@@ -49,9 +46,9 @@ provider:
     role: EcsNginxRole
   vpc:
     securityGroupIds:
-    - ${self:custom.securityGroupIds}
+      - ${self:custom.securityGroupIds}
     subnetIds:
-    - ${self:custom.subnetIds}
+      - ${self:custom.subnetIds}
   stage: local
 
 fargate:
@@ -66,21 +63,21 @@ fargate:
     assignPublicIp: true
   tasks:
     BuildDocker:
-      name: nginx
+      name: ${self:service}-${opt:stage, self:provider.stage}
       image: latest
       executionRoleArn: arn:aws:iam::${self:custom.awsAccountId}:role/${self:service}-${opt:stage, self:provider.stage}-execution-role
       taskRoleArn: arn:aws:iam::${self:custom.awsAccountId}:role/${self:service}-${opt:stage, self:provider.stage}-task-role
 
 resources:
-  # Log group
-  - ${file(resources/log-group.yml)}
-  # Role
-  - ${file(resources/role.yml)}
+  # CloudWatch Logs
+  - ${file(resources/cloudwatch-logs.yml)}
+  # IAM Role
+  - ${file(resources/iam-role.yml)}
   # # S3
   - ${file(resources/s3-bucket.yml)}
-  # Cluster
-  - ${file(resources/cluster.yml)}
-  # Task
-  - ${file(resources/task.yml)}
-  # Service ECS
-  - ${file(resources/service.yml)}
+  # ECS Cluster
+  - ${file(resources/ecs-cluster.yml)}
+  # ECS Task
+  - ${file(resources/ecs-task.yml)}
+  # ECS Service ECS
+  - ${file(resources/ecs-service.yml)}

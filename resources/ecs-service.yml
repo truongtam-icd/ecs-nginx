@@ -11,8 +11,8 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           SecurityGroups:
-          - ${self:custom.securityGroupIds}
+            - ${self:custom.securityGroupIds}
           Subnets:
-          - ${self:custom.subnetIds}
+            - ${self:custom.subnetIds}
       LaunchType: FARGATE
       EnableExecuteCommand: true

@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/truongtam-icd/ecs-nginx#readme",
   "devDependencies": {
+    "es6-promisify": "^7.0.0",
     "serverless": "./package/serverless",
     "serverless-dotenv-plugin": "^6.0.0"
   }

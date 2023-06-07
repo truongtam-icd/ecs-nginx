@@ -18,9 +18,3 @@ Resources:
               - DELETE
               - HEAD
             MaxAge: 3000
-
-# Print out the name of the bucket that is created
-Outputs:
-  EcsNginxBucketName:
-    Value:
-      Ref: EcsNginxBucket

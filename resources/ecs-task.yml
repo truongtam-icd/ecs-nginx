@@ -1,0 +1,36 @@
+Resources:
+  NginxTask:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: ${self:service}
+      TaskRoleArn: !Ref EcsNginxTaskRole
+      RequiresCompatibilities:
+        - EC2
+        - FARGATE
+      RuntimePlatform:
+        OperatingSystemFamily: LINUX
+      NetworkMode: awsvpc
+      ExecutionRoleArn: !Ref EcsNginxExecutionRole
+      Memory: '4096'
+      Cpu: '2048'
+      ContainerDefinitions:
+        - Image: localhost:4510/serverless-${self:service}-${opt:stage, self:provider.stage}:latest
+          Name: ${self:service}
+          Cpu: 10
+          Memory: 512
+          Essential: true
+          PortMappings:
+            - ContainerPort: 8080
+              Protocol: tcp
+              HostPort: 8080
+          Environment: []
+          EntryPoint:
+            - sh
+            - "-c"
+          Command: []
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: ${self:service}-${opt:stage, self:provider.stage}-log-group
+              awslogs-region: ${self:provider.region}
+              awslogs-stream-prefix: fargate

@@ -3,7 +3,7 @@ services:
   nginx:
     build:
       context: ./
-      dockerfile: docker/Nginx.Dockerfile
+      dockerfile: docker/Dockerfile
     ports:
       - "8080:8080"
     environment:
