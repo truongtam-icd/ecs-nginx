@@ -1,13 +1,15 @@
-#<a href="https://docs.localstack.cloud/getting-started/">Localstack for ecs-nginx</a>
-##<a href="https://github.com/localstack/awscli-local">Install awslocal cli</a>
-####Require
+# <a href="https://docs.localstack.cloud/getting-started/">Localstack for ecs-nginx</a>
+## <a href="https://github.com/localstack/awscli-local">Install awslocal cli</a>
+#### Require
 Python3: >=3.10.x<br>
 pip3: >=22.3.x
+
 ```bash
 pip install awscli-local
 ```
 
-##<a href="https://docs.localstack.cloud/getting-started/installation/#docker">Start localstack-pro by docker</a>
+## <a href="https://docs.localstack.cloud/getting-started/installation/#docker">Start localstack-pro by docker</a>
+
 ```bash
 docker run -d \
   --name localstack_main \
@@ -29,45 +31,50 @@ docker run -d \
   localstack/localstack-pro
 ```
 
-###Run by shell script ECS
+### Run by shell script ECS
 Install
+
 ```bash
 ./setup.sh
 ```
 
 Start
+
 ```bash
 ./start.sh
 ```
 
-###Localhost
+### Localhost
+
 ```bash
 http://ecs-nginx-local-load-balancer.elb.localhost.localstack.cloud:4566/
 ```
 
-###Serverless
-####Install
+### Serverless
+#### Install
 ```bash
 yarn install
 ```
 
-####Build
+#### Build
 ```bash
 yarn build
 ```
 
-####Deploy
+#### Deploy
 ```bash
 yarn deploy
 ```
 
 #### ECR (Images node)
 - Build
+
 ```bash
 docker-compose -f docker-compose.nginx.yml up -d --build
 ```
 
 - Run
+
 ```bash
 # Start ECR
 docker-compose -f docker-compose.nginx.yml start
@@ -77,10 +84,17 @@ docker-compose -f docker-compose.nginx.yml stop
 ```
 
 - Other
+
 ```bash
 # Login to ECR
 docker exec -it <CONTAINER ID> sh
 
 # Check ECR log
 docker-compose -f docker-compose.nginx.yml logs -f --tail=50
+```
+
+### Other
+
+```bash
+nginx -s reload
 ```
